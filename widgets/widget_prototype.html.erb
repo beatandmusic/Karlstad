@@ -20,32 +20,34 @@
 
 <!-- This is the executed script for the widget. Here you can add and remove your own functions. -->
 <script type="text/javascript">
-
+// setting the needed variables
+// account
+var account;
+var products;
+var artist = $('#widget').attr('artist');
+$.getJSON(('/widget_api/' + artist), null, function(data){
+		account = data;
+	}
+);
+$.getJSON('/widget_api/' + artist + '/products', null, function(data){
+		products = data;
+		for (var x = 0; x < products.length; x++){
+			$('<div>'+products[x].product.titel+'</div><p/>').appendTo('.title-list');
+		};
+	}
+);
 </script>
 
-<!-- this actually is the HTML code of the widget. Here you can build your custom layout. -->
-<div class="widget">
+<!-- this actually is the HTML code of the widget. Here you can build your custom layout.
+		### NOTE: the artist is hardcoded and will be generated into the copy code of the widget.
+		For test reasons you have to replace DUMMY through your own account name. -->
+<div class="widget" id="widget" artist="DUMMY">
 	<div class="content">
-		<!-- account -->
-		<div class="header" style="float: left;"><%= @account.name + "´s musicstore" %></div>
+		<div class="header" style="float: left;"></div>
 		<div class="clearer">&nbsp;</div>
-		<div class="title-list">
-		<% for sound in @music_titles do %>
-			<p>
-				<div id="shouldbethetitlefixit" class="draggable">
-					<!-- track -->
-					<%= link_to "#{sound.titel}", '#', :onclick => "preview('#{sound.titel}'); return false;" %>
-				</div>
-			</p>
-		<% end %>
-		</div>
+		<div class="title-list"><div class="item"></div></div>
 		<div class="shopping-card" id="droppable"> Warenkorb </div>
 		<div class="clearer">&nbsp;</div>
-		<div class="buy-button">
-			<div style="margin-top: 5px;">
-				<!-- buy -->
-				<%= link_to "Kaufen", widgets_path(:order_hash => "new Hammer", :account => "mkuntze"), :method => :post %>
-			</div>
-		</div>
+		<div class="buy-button">Kaufen</div>
 	</div>
 </div>
